@@ -86,12 +86,11 @@ func (m *Malbolge) crazy(x, y uint32) uint32 {
 	return result
 }
 
-func (m *Malbolge) Run() {
+func (m *Malbolge) Run() error {
 	var c, d, a uint32
 	for {
 		if m.memory[c] < dataLower || m.memory[c] > dataUpper {
-			fmt.Fprintf(os.Stderr, "ERROR: memory[%d] [C] = %d is not a valid instruction\n", c, m.memory[c])
-			continue
+			return fmt.Errorf("data at index %d in memory is not a valid instruction (value %d)", c, m.memory[c])
 		}
 		switch encode[(m.memory[c]-33+c)%94] {
 		case 'j':
@@ -115,7 +114,7 @@ func (m *Malbolge) Run() {
 				a = uint32(ch)
 			}
 		case 'v':
-			return
+			return nil
 		}
 
 		m.memory[c] = uint32(decode[m.memory[c]-33])
@@ -157,6 +156,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	m.Run()
+	if err := m.Run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
 	fmt.Println()
 }
