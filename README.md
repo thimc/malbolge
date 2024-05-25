@@ -15,7 +15,7 @@ supported.
 	go build -o malbolge .
 	./malbolge <hello-world.mal>
 
-_NOTE: If no arguments are passed then it will read of the standard
+_NOTE: If no arguments are passed then it will read off the standard
 input and assume the data is valid malbolge code_
 
 ## License
